@@ -44,7 +44,6 @@ class BuildingsAnalyzer:
         # print (buildingtypes)
         #R = "\033[0;33;40m" #Y
         #G = "\033[0;32;40m" # GREEN
-        color = 0
         all_rows = [["Cladire"]+ playernames]]
         myTable = PrettyTable(["Cladire"]+ playernames) 
         for btype in buildingtypes:
@@ -54,13 +53,8 @@ class BuildingsAnalyzer:
                     row.append(buildings[pp][btype])
                 else:
                     row.append(0)
-            if color == 0:
-                myTable.add_row([btype] + row)   
-                color = 1
-            else:
-                myTable.add_row([btype] + row)   
-                color = 0
-            all_rows.append(row)
+            myTable.add_row([btype] + row) 
+            all_rows.append([btype] + row)
         print(myTable)
         return all_rows
 
