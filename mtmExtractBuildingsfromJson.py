@@ -44,7 +44,7 @@ class BuildingsAnalyzer:
         # print (buildingtypes)
         #R = "\033[0;33;40m" #Y
         #G = "\033[0;32;40m" # GREEN
-        all_rows = [["Cladire"]+ playernames]]
+        self.all_rows = [["Cladire"]+ playernames]]
         myTable = PrettyTable(["Cladire"]+ playernames) 
         for btype in buildingtypes:
             row = []
@@ -54,9 +54,11 @@ class BuildingsAnalyzer:
                 else:
                     row.append(0)
             myTable.add_row([btype] + row) 
-            all_rows.append([btype] + row)
+            self.all_rows.append([btype] + row)
         print(myTable)
-        self.all_rows = all_rows
+  def getRows(self):
+    return self.all_rows
+      
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
