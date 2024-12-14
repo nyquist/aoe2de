@@ -1,5 +1,5 @@
 import json, csv
-from prettytable import PrettyTable 
+from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
 
 
 class BuildingsAnalyzer:
@@ -46,7 +46,8 @@ class BuildingsAnalyzer:
         #R = "\033[0;33;40m" #Y
         #G = "\033[0;32;40m" # GREEN
         self.all_rows.append(["Cladire"] + playernames )
-        myTable = PrettyTable( ["Cladire"]+ playernames ) 
+        ecoTable = PrettyTable( ["Cladire"]+ playernames ) 
+        milTable = PrettyTable( ["Cladire"]+ playernames ) 
         for btype in buildingtypes:
             row = []
             for pp in range(8):
@@ -54,15 +55,31 @@ class BuildingsAnalyzer:
                     row.append(buildings[pp][btype])
                 else:
                     row.append(0)
-            myTable.add_row([btype] + row) 
+            if btype in ['Barracks', 'Stable', 'Castle', 'Siege Workshop', 'Archery Range', 'University', 'Blacksmith', 'Monastery', 'Watch Tower']:
+                ecoTable.add_row([btype] + row)
+            else:
+                milTable.add_row([btype] + row)
             self.all_rows.append([btype] + row)
-        print(myTable)
-        print(self.all_rows)
+        print(ecoTable)
+        print(milTable)
+        self.milTable = milTable
+        self.ecoTable = ecoTable
+        #print(self.all_rows)
+        
     
     def getRows(self):
         return self.all_rows
+    
+    def getTable(self, table_type="mil"):
+        if table_type == "mil":
+            mtable = self.milTable
+        else:
+            mtable = self.ecoTable
+        mtable.set_style(MARKDOWN)
+        return mtable.get_string()
       
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
-    # analyzer = BuildingsAnalyzer("input_file")
+    analyzer = BuildingsAnalyzer("AgeIIDE_Replay_358345344.aoe2record.json")
+    print (analyzer.getTable("eco"))
