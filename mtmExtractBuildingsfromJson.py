@@ -23,39 +23,39 @@ class BuildingsAnalyzer:
                                     if isinstance(pl4,dict):
                                         print (pl4["name"], pl4["number"])
                                         playernames[pl4["number"]-1]=pl4["name"]
-        print (playernames)
+    print (playernames)
     
-        buildings = [{},{},{},{},{},{},{},{}]
-        print (buildings)
-        buildingtypes = []
-        for action in inputData["actions"]:
-            if "payload" in action.keys():
-                if "building" in action["payload"].keys():
-                    if action["payload"]["building"] not in buildingtypes:
-                        buildingtypes.append(action["payload"]["building"])
-                    if action["payload"]["building"] in buildings[action["player"]-1].keys():
-                        buildings[action["player"]-1][action["payload"]["building"]]+=1
-                    else:
-                        buildings[action["player"]-1][action["payload"]["building"]]=1
-        # for pp in range(8):
-        #     print(f"\n{playernames[pp]} buildings:")
-        #     for key, value in buildings[pp].items():
-        #         print (key, value)
-        # print (buildingtypes)
-        #R = "\033[0;33;40m" #Y
-        #G = "\033[0;32;40m" # GREEN
-        self.all_rows = [["Cladire"]+ playernames]]
-        myTable = PrettyTable(["Cladire"]+ playernames) 
-        for btype in buildingtypes:
-            row = []
-            for pp in range(8):
-                if btype in buildings[pp]:
-                    row.append(buildings[pp][btype])
+    buildings = [{},{},{},{},{},{},{},{}]
+    print (buildings)
+    buildingtypes = []
+    for action in inputData["actions"]:
+        if "payload" in action.keys():
+            if "building" in action["payload"].keys():
+                if action["payload"]["building"] not in buildingtypes:
+                    buildingtypes.append(action["payload"]["building"])
+                if action["payload"]["building"] in buildings[action["player"]-1].keys():
+                    buildings[action["player"]-1][action["payload"]["building"]]+=1
                 else:
-                    row.append(0)
-            myTable.add_row([btype] + row) 
-            self.all_rows.append([btype] + row)
-        print(myTable)
+                    buildings[action["player"]-1][action["payload"]["building"]]=1
+    # for pp in range(8):
+    #     print(f"\n{playernames[pp]} buildings:")
+    #     for key, value in buildings[pp].items():
+    #         print (key, value)
+    # print (buildingtypes)
+    #R = "\033[0;33;40m" #Y
+    #G = "\033[0;32;40m" # GREEN
+    self.all_rows = [ ["Cladire"] + playernames ]
+    myTable = PrettyTable( ["Cladire"]+ playernames ) 
+    for btype in buildingtypes:
+        row = []
+        for pp in range(8):
+            if btype in buildings[pp]:
+                row.append(buildings[pp][btype])
+            else:
+                row.append(0)
+        myTable.add_row([btype] + row) 
+        self.all_rows.append([btype] + row)
+    print(myTable)
   def getRows(self):
     return self.all_rows
       
