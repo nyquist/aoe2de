@@ -57,6 +57,7 @@ class BuildingsAnalyzer:
             myTable.add_row([btype] + row) 
             self.all_rows.append([btype] + row)
         print(myTable)
+        print(self.all_rows)
     
     def getRows(self):
         return self.all_rows
