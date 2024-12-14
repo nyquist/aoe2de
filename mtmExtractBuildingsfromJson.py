@@ -60,6 +60,7 @@ class BuildingsAnalyzer:
                 myTable.add_row([R + btype] + row)   
                 color = 0
         print(myTable)  
+      return buildings
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
