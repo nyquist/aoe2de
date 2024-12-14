@@ -42,19 +42,25 @@ class BuildingsAnalyzer:
         #     for key, value in buildings[pp].items():
         #         print (key, value)
         # print (buildingtypes)
+        R = "\033[0;31;40m" #RED
+        G = "\033[0;32;40m" # GREEN
+        color = 0
         myTable = PrettyTable(["Cladire"]+ playernames) 
         for btype in buildingtypes:
             row = []
             for pp in range(8):
                 if btype in buildings[pp]:
-                    # print (buildings[pp][btype])
                     row.append(buildings[pp][btype])
                 else:
-                    # print (0)
                     row.append(0)
-            myTable.add_row([btype] + row)   
+            if color == 0:
+                myTable.add_row([G + btype] + row)   
+                color = 1
+            else:
+                myTable.add_row([R + btype] + row)   
+                color = 0
         print(myTable)  
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
-    #analyzer = BuildingsAnalyzer(file_name)
+    # analyzer = BuildingsAnalyzer("input_file")
