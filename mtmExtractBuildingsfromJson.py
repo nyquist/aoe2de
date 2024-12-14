@@ -56,7 +56,7 @@ class BuildingsAnalyzer:
             myTable.add_row([btype] + row) 
             all_rows.append([btype] + row)
         print(myTable)
-        return all_rows
+        self.all_rows = all_rows
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
