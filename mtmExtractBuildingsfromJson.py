@@ -42,7 +42,7 @@ class BuildingsAnalyzer:
         #     for key, value in buildings[pp].items():
         #         print (key, value)
         # print (buildingtypes)
-        R = "\033[0;31;40m" #RED
+        R = "\033[0;33;40m" #Y
         G = "\033[0;32;40m" # GREEN
         color = 0
         myTable = PrettyTable(["Cladire"]+ playernames) 
