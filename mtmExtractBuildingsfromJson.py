@@ -1,6 +1,6 @@
 import json, csv
 from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
-from mtmExtactPlayersFromJson import extractPlayers
+from mtmExtractPlayersFromJson import extractPlayers
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):
