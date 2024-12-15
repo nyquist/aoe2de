@@ -1,13 +1,31 @@
 import json, csv
-from prettytable import PrettyTable 
-from mtmExtactPlayersFromJson import extractPlayers
+from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
+
 
 class BuildingsAnalyzer:
-  def __init__(self, inputFile):
-    with open (inputFile) as p:
-        inputData = json.load(p)
-        playernames = extractPlayers(inputFile)
-    
+    def __init__(self, inputFile):
+        self.all_rows = []
+        with open (inputFile) as p:
+            inputData = json.load(p)
+            playernames =[1,1,1,1,1,1,1,1]
+            for player in inputData["players"]:
+                if isinstance(player,dict):
+                    print (player["name"], player["number"])
+                    playernames[player["number"]-1]=player["name"]
+                    for pl in player["team"]:
+                        if isinstance(pl,dict):
+                            print (pl["name"], pl["number"])
+                            playernames[pl["number"]-1]=pl["name"]
+                            for pl3 in pl["team"]:
+                                if isinstance(pl3,dict):
+                                    print (pl3["name"], pl3["number"])
+                                    playernames[pl3["number"]-1]=pl3["name"]
+                                    for pl4 in pl3["team"]:
+                                        if isinstance(pl4,dict):
+                                            print (pl4["name"], pl4["number"])
+                                            playernames[pl4["number"]-1]=pl4["name"]
+        print (playernames)
+        
         buildings = [{},{},{},{},{},{},{},{}]
         print (buildings)
         buildingtypes = []
@@ -25,10 +43,11 @@ class BuildingsAnalyzer:
         #     for key, value in buildings[pp].items():
         #         print (key, value)
         # print (buildingtypes)
-        R = "\033[0;33;40m" #Y
-        G = "\033[0;32;40m" # GREEN
-        color = 0
-        myTable = PrettyTable(["Cladire"]+ playernames) 
+        #R = "\033[0;33;40m" #Y
+        #G = "\033[0;32;40m" # GREEN
+        self.all_rows.append(["Cladire"] + playernames )
+        ecoTable = PrettyTable( ["Cladire"]+ playernames ) 
+        milTable = PrettyTable( ["Cladire"]+ playernames ) 
         for btype in buildingtypes:
             row = []
             for pp in range(8):
@@ -36,14 +55,31 @@ class BuildingsAnalyzer:
                     row.append(buildings[pp][btype])
                 else:
                     row.append(0)
-            if color == 0:
-                myTable.add_row([G + btype] + row)   
-                color = 1
+            if btype in ['Barracks', 'Stable', 'Castle', 'Siege Workshop', 'Archery Range', 'University', 'Blacksmith', 'Monastery', 'Watch Tower']:
+                ecoTable.add_row([btype] + row)
             else:
-                myTable.add_row([R + btype] + row)   
-                color = 0
-        print(myTable)  
+                milTable.add_row([btype] + row)
+            self.all_rows.append([btype] + row)
+        print(ecoTable)
+        print(milTable)
+        self.milTable = milTable
+        self.ecoTable = ecoTable
+        #print(self.all_rows)
+        
+    
+    def getRows(self):
+        return self.all_rows
+    
+    def getTable(self, table_type="mil"):
+        if table_type == "mil":
+            mtable = self.milTable
+        else:
+            mtable = self.ecoTable
+        mtable.set_style(MARKDOWN)
+        return mtable.get_string()
+      
 
 if __name__ == '__main__':
     print ("Need to fix passing file_name. Try using it as a module")
-    # analyzer = BuildingsAnalyzer(r"some.json")
+    analyzer = BuildingsAnalyzer("AgeIIDE_Replay_358345344.aoe2record.json")
+    print (analyzer.getTable("eco"))
