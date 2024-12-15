@@ -1,33 +1,16 @@
 import json, csv
 from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
-
+from mtmExtactPlayersFromJson import extractPlayers
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):
         self.all_rows = []
         with open (inputFile) as p:
             inputData = json.load(p)
-            playernames =[1,1,1,1,1,1,1,1]
-            for player in inputData["players"]:
-                if isinstance(player,dict):
-                    print (player["name"], player["number"])
-                    playernames[player["number"]-1]=player["name"]
-                    for pl in player["team"]:
-                        if isinstance(pl,dict):
-                            print (pl["name"], pl["number"])
-                            playernames[pl["number"]-1]=pl["name"]
-                            for pl3 in pl["team"]:
-                                if isinstance(pl3,dict):
-                                    print (pl3["name"], pl3["number"])
-                                    playernames[pl3["number"]-1]=pl3["name"]
-                                    for pl4 in pl3["team"]:
-                                        if isinstance(pl4,dict):
-                                            print (pl4["name"], pl4["number"])
-                                            playernames[pl4["number"]-1]=pl4["name"]
-        print (playernames)
+            playernames = extractPlayers(inputFile)
         
         buildings = [{},{},{},{},{},{},{},{}]
-        print (buildings)
+        # print (buildings)
         buildingtypes = []
         for action in inputData["actions"]:
             if "payload" in action.keys():
