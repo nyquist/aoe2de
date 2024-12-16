@@ -1,13 +1,14 @@
 import json, csv, argparse
-from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
-from mtmExtractPlayersFromJson import extractPlayers
+from prettytable import PrettyTable
+from mtmExtractPlayersFromJson import Players
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):
         self.all_rows = []
         with open (inputFile) as p:
             inputData = json.load(p)
-            playernames = extractPlayers(inputFile)
+            players = Players(inputFile)
+            playernames = players.getPlayerNames()
         
         buildings = [{},{},{},{},{},{},{},{}]
         # print (buildings)
@@ -28,6 +29,7 @@ class BuildingsAnalyzer:
         # print (buildingtypes)
         #R = "\033[0;33;40m" #Y
         #G = "\033[0;32;40m" # GREEN
+
         self.all_rows.append(["Cladire"] + playernames )
         ecoTable = PrettyTable( ["Cladire"]+ playernames ) 
         milTable = PrettyTable( ["Cladire"]+ playernames ) 
@@ -43,8 +45,8 @@ class BuildingsAnalyzer:
             else:
                 milTable.add_row([btype] + row)
             self.all_rows.append([btype] + row)
-        print(ecoTable)
-        print(milTable)
+        #print(ecoTable)
+        #print(milTable)
         self.milTable = milTable
         self.ecoTable = ecoTable
         #print(self.all_rows)
@@ -58,7 +60,6 @@ class BuildingsAnalyzer:
             mtable = self.milTable
         else:
             mtable = self.ecoTable
-        mtable.set_style(MARKDOWN)
         return mtable.get_string()
       
 
