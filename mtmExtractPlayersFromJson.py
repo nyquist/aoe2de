@@ -4,6 +4,7 @@ import json, csv, argparse, pprint
 class Players:
     def __init__(self, inputFile):
         self.teams = []
+        self.players = []
         with open(inputFile) as p:
             inputData = json.load(p)
             players = [1, 1, 1, 1, 1, 1, 1, 1]
@@ -53,7 +54,11 @@ class Players:
                                                 "team": self.teams.index(pl4["team_id"])
                                                 + 1,
                                             }
-        self.players = players
+        
+        for p in players:
+            if p != 1:
+                self.players.append(p)
+        
 
     def getPlayerNames(self):
         return [x["name"] for x in self.players]
