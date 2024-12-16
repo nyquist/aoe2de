@@ -1,9 +1,9 @@
 import json, csv, argparse, pprint
 from prettytable import PrettyTable
-from mtmExtractPlayersFromJson import Players
+from .mtmExtractPlayersFromJson import Players
 
 class BuildingsAnalyzer:
-    def __init__(self, inputFile):
+    def __init__(self, inputFile):        
         self.buildings = [{},{},{},{},{},{},{},{}]
         self.buildingtypes = []
         self.players = Players(inputFile)
