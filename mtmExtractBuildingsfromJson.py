@@ -1,6 +1,6 @@
 import json, csv, argparse, pprint
 from prettytable import PrettyTable
-from .mtmExtractPlayersFromJson import Players
+from mtmExtractPlayersFromJson import Players
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):        
@@ -53,6 +53,7 @@ class BuildingsAnalyzer:
                     row.append(f"{ordered_buildings[pp][btype]} [{percent:+.2f}]")
                     btotal = btotal + ordered_buildings[pp][btype]
                 else:
+                    percent = 0 - baverage
                     row.append(f"0 [{percent:+.2f}]")
             the_table.add_row([f"{btype} [{baverage:.2f}]"] + row)
             
