@@ -71,7 +71,21 @@ class BuildingsAnalyzer:
                 tables.append(the_table.get_string(start=current_row, end = current_row+rows))
                 current_row = current_row+rows
             return tables
+    def getValues(self, byTeam=False):
+        player_count = len(self.playernames)
+        ordered_buildings = self.getListInNewOrder(self.buildings, byTeam)
+        ordered_players = self.getListInNewOrder(self.playernames, byTeam)
+        values = {}
+        for btype in self.buildingtypes:
+            values[btype] = {}
+            for pp in range(player_count):
+                if btype in ordered_buildings[pp]:
+                    values[btype][ordered_players[pp]] = ordered_buildings[pp][btype]
+                else:
+                    values[btype][ordered_players[pp]] = 0
 
+        return values
+        
         
 
       
@@ -89,3 +103,4 @@ if __name__ == '__main__':
     for t in analyzer.getTables(byTeam = True, rows = 3):
         print (len(t))
         print (t)
+    print(analyzer.getValues())
