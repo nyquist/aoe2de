@@ -1,6 +1,10 @@
 import json, csv, argparse, pprint
 from prettytable import PrettyTable
-from aoe2de.mtmExtractPlayersFromJson import Players
+try:
+    #TODO
+    from aoe2de.mtmExtractPlayersFromJson import Players
+except:
+    pass
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):        
@@ -35,7 +39,7 @@ class BuildingsAnalyzer:
         return intial_list
 
     def getTables(self, byTeam = False, rows=0):
-        
+        player_count = len(self.playernames)
         ordered_buildings = self.getListInNewOrder(self.buildings, byTeam)
         ordered_players = self.getListInNewOrder(self.playernames, byTeam)
         the_table = PrettyTable( ["Cladire [AVG]"]+ ordered_players ) 
@@ -43,11 +47,11 @@ class BuildingsAnalyzer:
         for btype in self.buildingtypes:
             row = []
             btotal = 0
-            for pp in range(8):
+            for pp in range(player_count):
                 if btype in ordered_buildings[pp]:
                     btotal = btotal + ordered_buildings[pp][btype]
             baverage = btotal/len(self.playernames)
-            for pp in range(8):
+            for pp in range(player_count):
                 if btype in ordered_buildings[pp]:
                     percent = ordered_buildings[pp][btype] - baverage
                     row.append(f"{ordered_buildings[pp][btype]} [{percent:+.2f}]")
@@ -73,6 +77,7 @@ class BuildingsAnalyzer:
       
 
 if __name__ == '__main__':
+    from mtmExtractPlayersFromJson import Players
     parser = argparse.ArgumentParser( 
         prog='extractPlayers',
         description='Extracts Players from JSON')
