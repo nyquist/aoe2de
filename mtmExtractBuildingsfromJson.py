@@ -1,66 +1,74 @@
-import json, csv, argparse
+import json, csv, argparse, pprint
 from prettytable import PrettyTable
 from mtmExtractPlayersFromJson import Players
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):
-        self.all_rows = []
+        self.buildings = [{},{},{},{},{},{},{},{}]
+        self.buildingtypes = []
+        self.players = Players(inputFile)
+        self.playernames = self.players.getPlayerNames()
+        
         with open (inputFile) as p:
             inputData = json.load(p)
-            players = Players(inputFile)
-            playernames = players.getPlayerNames()
-        
-        buildings = [{},{},{},{},{},{},{},{}]
-        # print (buildings)
-        buildingtypes = []
         for action in inputData["actions"]:
             if "payload" in action.keys():
                 if "building" in action["payload"].keys():
-                    if action["payload"]["building"] not in buildingtypes:
-                        buildingtypes.append(action["payload"]["building"])
-                    if action["payload"]["building"] in buildings[action["player"]-1].keys():
-                        buildings[action["player"]-1][action["payload"]["building"]]+=1
+                    if action["payload"]["building"] not in self.buildingtypes:
+                        self.buildingtypes.append(action["payload"]["building"])
+                    if action["payload"]["building"] in self.buildings[action["player"]-1].keys():
+                        self.buildings[action["player"]-1][action["payload"]["building"]]+=1
                     else:
-                        buildings[action["player"]-1][action["payload"]["building"]]=1
-        # for pp in range(8):
-        #     print(f"\n{playernames[pp]} buildings:")
-        #     for key, value in buildings[pp].items():
-        #         print (key, value)
-        # print (buildingtypes)
-        #R = "\033[0;33;40m" #Y
-        #G = "\033[0;32;40m" # GREEN
+                        self.buildings[action["player"]-1][action["payload"]["building"]]=1
+    
 
-        self.all_rows.append(["Cladire"] + playernames )
-        ecoTable = PrettyTable( ["Cladire"]+ playernames ) 
-        milTable = PrettyTable( ["Cladire"]+ playernames ) 
-        for btype in buildingtypes:
-            row = []
-            for pp in range(8):
-                if btype in buildings[pp]:
-                    row.append(buildings[pp][btype])
-                else:
-                    row.append(0)
-            if btype in ['Barracks', 'Stable', 'Castle', 'Siege Workshop', 'Archery Range', 'University', 'Blacksmith', 'Monastery', 'Watch Tower']:
-                ecoTable.add_row([btype] + row)
-            else:
-                milTable.add_row([btype] + row)
-            self.all_rows.append([btype] + row)
-        #print(ecoTable)
-        #print(milTable)
-        self.milTable = milTable
-        self.ecoTable = ecoTable
-        #print(self.all_rows)
+
+
+    def getListInNewOrder(self, intial_list, byTeam = False):
+        if byTeam:
+            #print(self.players.teams)
+            new_list = []
+            for t in self.players.teams:
+                for p in t:
+                    new_list.append(intial_list[p-1])
+            return new_list
+        return intial_list
+
+    def getTables(self, byTeam = False, rows=0):
         
-    
-    def getRows(self):
-        return self.all_rows
-    
-    def getTable(self, table_type="mil"):
-        if table_type == "mil":
-            mtable = self.milTable
+        ordered_buildings = self.getListInNewOrder(self.buildings, byTeam)
+        ordered_players = self.getListInNewOrder(self.playernames, byTeam)
+        the_table = PrettyTable( ["Cladire [AVG]"]+ ordered_players ) 
+        
+        for btype in self.buildingtypes:
+            row = []
+            btotal = 0
+            for pp in range(8):
+                if btype in ordered_buildings[pp]:
+                    btotal = btotal + ordered_buildings[pp][btype]
+            baverage = btotal/len(self.playernames)
+            for pp in range(8):
+                if btype in ordered_buildings[pp]:
+                    percent = ordered_buildings[pp][btype] - baverage
+                    row.append(f"{ordered_buildings[pp][btype]} [{percent:+.2f}]")
+                    btotal = btotal + ordered_buildings[pp][btype]
+                else:
+                    row.append(f"0 [{percent:+.2f}]")
+            the_table.add_row([f"{btype} [{baverage:.2f}]"] + row)
+            
+        #print(len(the_table.get_string()))
+        tables = []
+        current_row = 0
+        if rows == 0:
+            return [the_table.get_string()]
         else:
-            mtable = self.ecoTable
-        return mtable.get_string()
+            while current_row < len(self.buildingtypes):
+                tables.append(the_table.get_string(start=current_row, end = current_row+rows))
+                current_row = current_row+rows
+            return tables
+
+        
+
       
 
 if __name__ == '__main__':
@@ -72,5 +80,6 @@ if __name__ == '__main__':
 
     inputFile = args.filename    
     analyzer = BuildingsAnalyzer(inputFile)
-    print (analyzer.getTable("eco"))
-    print (analyzer.getTable("mil"))
+    for t in analyzer.getTables(byTeam = True, rows = 3):
+        print (len(t))
+        print (t)
