@@ -1,6 +1,6 @@
 import json, csv, argparse, pprint
 from prettytable import PrettyTable
-from mtmExtractPlayersFromJson import Players
+from aoe2de.mtmExtractPlayersFromJson import Players
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):        
