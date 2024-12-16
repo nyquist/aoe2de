@@ -1,6 +1,6 @@
-import json, csv
+import json, csv, argparse
 from prettytable import PrettyTable, MARKDOWN, ORGMODE, DOUBLE_BORDER 
-from aoe2de.mtmExtactPlayersFromJson import extractPlayers
+from mtmExtractPlayersFromJson import extractPlayers
 
 class BuildingsAnalyzer:
     def __init__(self, inputFile):
@@ -63,6 +63,13 @@ class BuildingsAnalyzer:
       
 
 if __name__ == '__main__':
-    print ("Need to fix passing file_name. Try using it as a module")
-    analyzer = BuildingsAnalyzer("AgeIIDE_Replay_358345344.aoe2record.json")
+    parser = argparse.ArgumentParser( 
+        prog='extractPlayers',
+        description='Extracts Players from JSON')
+    parser.add_argument('filename')           # positional argument
+    args = parser.parse_args()
+
+    inputFile = args.filename    
+    analyzer = BuildingsAnalyzer(inputFile)
     print (analyzer.getTable("eco"))
+    print (analyzer.getTable("mil"))
