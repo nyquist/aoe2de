@@ -1,4 +1,4 @@
-import json, csv
+import json, csv, argparse
 
 def extractPlayers(inputFile):
     with open (inputFile) as p:
@@ -19,5 +19,11 @@ def extractPlayers(inputFile):
     return playernames
 
 if __name__=="__main__":
-    inputFile = r"C:\CodesPlace\AgeGameAnalize\doi.json"
+    parser = argparse.ArgumentParser( 
+        prog='extractPlayers',
+        description='Extracts Players from JSON')
+    parser.add_argument('filename')           # positional argument
+    args = parser.parse_args()
+
+    inputFile = args.filename
     print(extractPlayers(inputFile))
